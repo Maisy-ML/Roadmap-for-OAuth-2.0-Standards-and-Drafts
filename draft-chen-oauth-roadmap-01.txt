@@ -1,0 +1,840 @@
+
+
+
+
+OAuth Working Group                                              M. Chen
+Internet-Draft                                                     L. Su
+Intended status: Informational                              China Mobile
+Expires: 7 November 2026                                      6 May 2026
+
+
+       A Comprehensive Roadmap for OAuth 2.0 Standards and Drafts
+                      draft-chen-oauth-roadmap-01
+
+Abstract
+
+   The OAuth 2.0 ecosystem has expanded significantly since the
+   publication of RFC 6749, resulting in a complex landscape of
+   extensions, security best practices (BCPs), and application-specific
+   profiles.  This complexity can be daunting for implementers,
+   architects, and security auditors.  This document serves as a
+   comprehensive roadmap to navigate this landscape.  It categorizes key
+   RFCs and active Internet-Drafts into functional areas, explains the
+   relationships between them, and provides context on their evolution.
+   The goal is to help readers understand the current state-of-the-art,
+   select the appropriate specifications for their use cases, and follow
+   the latest security best practices, while also offering a glimpse
+   into the future directions of the framework.
+
+Status of This Memo
+
+   This Internet-Draft is submitted in full conformance with the
+   provisions of BCP 78 and BCP 79.
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF).  Note that other groups may also distribute
+   working documents as Internet-Drafts.  The list of current Internet-
+   Drafts is at https://datatracker.ietf.org/drafts/current/.
+
+   Internet-Drafts are draft documents valid for a maximum of six months
+   and may be updated, replaced, or obsoleted by other documents at any
+   time.  It is inappropriate to use Internet-Drafts as reference
+   material or to cite them other than as "work in progress."
+
+   This Internet-Draft will expire on 7 November 2026.
+
+Copyright Notice
+
+   Copyright (c) 2026 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+
+
+
+
+
+Chen & Su                Expires 7 November 2026                [Page 1]
+
+Internet-Draft              OAuth 2.0 Roadmap                   May 2026
+
+
+   This document is subject to BCP 78 and the IETF Trust's Legal
+   Provisions Relating to IETF Documents (https://trustee.ietf.org/
+   license-info) in effect on the date of publication of this document.
+   Please review these documents carefully, as they describe your rights
+   and restrictions with respect to this document.  Code Components
+   extracted from this document must include Revised BSD License text as
+   described in Section 4.e of the Trust Legal Provisions and are
+   provided without warranty as described in the Revised BSD License.
+
+Table of Contents
+
+   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
+   2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   4
+   3.  Core & Foundational Documents . . . . . . . . . . . . . . . .   4
+   4.  Security Framework & Best Practices . . . . . . . . . . . . .   4
+     4.1.  Overall Security Guidance . . . . . . . . . . . . . . . .   4
+     4.2.  Protecting the Authorization Flow . . . . . . . . . . . .   5
+     4.3.  Securing Access Tokens (Sender-Constraining)  . . . . . .   5
+     4.4.  Mitigating Logical & Implementation Flaws . . . . . . . .   6
+     4.5.  Advanced Client Authentication  . . . . . . . . . . . . .   6
+   5.  Token Management & Formats  . . . . . . . . . . . . . . . . .   6
+   6.  Client Registration, Metadata & Discovery . . . . . . . . . .   7
+   7.  Grant Types & Assertion Framework . . . . . . . . . . . . . .   7
+   8.  Advanced Authorization Capabilities . . . . . . . . . . . . .   8
+   9.  Client-Specific Profiles & BCPs . . . . . . . . . . . . . . .   9
+   10. Relationship with OpenID Connect  . . . . . . . . . . . . . .   9
+   11. Advanced & Emerging Technologies  . . . . . . . . . . . . . .  10
+   12. Historical & Superseded Documents . . . . . . . . . . . . . .  10
+   13. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  11
+   14. Security Considerations . . . . . . . . . . . . . . . . . . .  11
+   15. Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  12
+   16. References  . . . . . . . . . . . . . . . . . . . . . . . . .  12
+     16.1.  Normative References . . . . . . . . . . . . . . . . . .  12
+     16.2.  Informative References . . . . . . . . . . . . . . . . .  14
+   Appendix A.  References . . . . . . . . . . . . . . . . . . . . .  15
+     A.1.  Normative References  . . . . . . . . . . . . . . . . . .  15
+     A.2.  Informative References  . . . . . . . . . . . . . . . . .  15
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  15
+
+1.  Introduction
+
+   This document categorizes specifications within the OAuth ecosystem
+   into three groups:
+
+   *  *Published RFCs*: Form the cornerstone of current standards and
+      best practices.
+
+
+
+
+
+Chen & Su                Expires 7 November 2026                [Page 2]
+
+Internet-Draft              OAuth 2.0 Roadmap                   May 2026
+
+
+   *  *Active Drafts*: Represent features and future directions actively
+      being developed by the working group.
+
+   *  *Historical Drafts*: Are expired or superseded but provide
+      valuable context for understanding the design decisions and
+      technical evolution of OAuth.
+
+   This roadmap is intended to guide implementers, architects, and
+   security professionals through the extensive library of OAuth
+   specifications, helping them select the appropriate documents for
+   their use cases.
+
+      +-------------------------------------------------+
+      |             Core: RFC 6749 (OAuth 2.0)          |
+      |             Core: RFC 6750 (Bearer Token)       |
+      +------------------------+------------------------+
+                               |
+            +------------------+------------------+
+            |                                     |
++-----------v------------+             +-----------v-----------+
+|   OAuth 2.1 (Draft)    |             |Security BCP (RFC 9700)|
+|(Consolidates & Hardens)|             | (Overall Guidance)    |
++------------------------+             +-----------------------+
+            |
++-----------+------------------------------------------------------------+
+| Foundational Extensions & Security Mechanisms                          |
++------------------------------------------------------------------------+
+|                                                                        |
+|  - RFC 7636 (PKCE): Protects code flow                                 |
+|  - RFC 9126 (PAR) / RFC 9101 (JAR): Protect authorization requests     |
+|  - RFC 9449 (DPoP) / RFC 8705 (mTLS): Sender-constrains tokens         |
+|  - RFC 8707 (Resource Indicators): Prevents token misuse               |
+|  - RFC 7519 (JWT)/ RFC 9068(JWT AT Profile): Token format & profile    |
+|  - RFC 8414 (AS Metadata): Enables server discovery                    |
+|                                                                        |
++------------------------------------------------------------------------+
+            |
++-----------+------------------------------------------------------------+
+| Advanced Capabilities & Grant Types                                    |
++------------------------------------------------------------------------+
+|                                                                        |
+|  - RFC 8693 (Token Exchange): Service-to-service delegation            |
+|  - RFC 8628 (Device Grant): Input-constrained devices                  |
+|  - RFC 9396 (RAR): Fine-grained authorization                          |
+|                                                                        |
++------------------------------------------------------------------------+
+
+   Figure 1: High-Level Relationship of Core OAuth 2.0 Specifications
+
+
+
+Chen & Su                Expires 7 November 2026                [Page 3]
+
+Internet-Draft              OAuth 2.0 Roadmap                   May 2026
+
+
+2.  Terminology
+
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+   "OPTIONAL" in this document are to be interpreted as described in BCP
+   14 RFC2119 [RFC8174].
+
+   Readers are expected to be familiar with the terms and concepts
+   described in the core OAuth 2.0 Framework [RFC6749].
+
+3.  Core & Foundational Documents
+
+   *  *RFC 6749*, The OAuth 2.0 Authorization Framework (S): The seminal
+      specification for OAuth 2.0, defining the core roles (client,
+      resource owner, authorization server, resource server), grant
+      types, and authorization flows.
+
+   *  *RFC 6750*, The OAuth 2.0 Authorization Framework: Bearer Token
+      Usage (S): Defines the most common access token type, the "Bearer"
+      token.  A bearer token can be used by anyone who possesses it,
+      making its transport and storage security critical.
+
+   *  *draft-ietf-oauth-v2-1*, The OAuth 2.1 Authorization Framework
+      (Draft): This effort consolidates and simplifies the original
+      framework for modern applications.  It formalizes a decade of
+      security best practices by *mandating* PKCE, redirect URI exact
+      matching, and the use of the Authorization Code flow.  It
+      explicitly *deprecates* insecure grants like the Implicit Grant
+      and the Resource Owner Password Credentials Grant, providing a
+      more secure baseline for new deployments.
+
+4.  Security Framework & Best Practices
+
+4.1.  Overall Security Guidance
+
+   *  *RFC 6819*, OAuth 2.0 Threat Model and Security Considerations
+      (I): An early comprehensive security document that analyzes
+      various threat models (e.g., token leakage, open redirectors) and
+      proposes countermeasures.  While still useful, many of its
+      recommendations have been superseded by RFC9700.
+
+   *  *RFC 9700*, OAuth 2.0 Security Best Current Practice (B): The
+      current definitive security guide.  It consolidates the latest
+      security lessons and provides a concrete set of recommendations
+      that all modern implementations SHOULD follow.
+
+
+
+
+
+
+Chen & Su                Expires 7 November 2026                [Page 4]
+
+Internet-Draft              OAuth 2.0 Roadmap                   May 2026
+
+
+   *  *draft-ietf-oauth-security-topics-update* (Draft): The draft name
+      for the work that eventually became RFC9700, representing the
+      continuous evolution of security guidance within the working
+      group.
+
+4.2.  Protecting the Authorization Flow
+
+   *  *RFC 7636*, Proof Key for Code Exchange (PKCE) (S): Protects the
+      Authorization Code flow from interception attacks. *Originally
+      designed for public clients (like mobile apps) that cannot
+      securely store a secret, PKCE is now a BCP for all client types,
+      including confidential ones*, as it provides a robust defense-in-
+      depth against code injection.
+
+   *  *RFC 9101*, JWT-Secured Authorization Request (JAR) (S): Ensures
+      the integrity and authenticity of authorization request parameters
+      by packaging them into a signed (and optionally encrypted) JWT.
+      This prevents attackers from tampering with parameters like
+      redirect_uri or scope.
+
+   *  *RFC 9126*, Pushed Authorization Requests (PAR) (S): Enhances
+      security and privacy by allowing a client to push its
+      authorization request parameters directly to the authorization
+      server via a secure backchannel.  This returns a request_uri which
+      the client then sends through the browser. *PAR protects request
+      parameters from being exposed to the user agent (browser) or in
+      server logs*, and it works very well in combination with JAR for a
+      fully secured request.
+
+4.3.  Securing Access Tokens (Sender-Constraining)
+
+   *  *RFC 8705*, Mutual-TLS Client Authentication and Certificate-Bound
+      Access Tokens (S): A powerful mechanism that provides two
+      functions: first, it defines a strict client authentication method
+      using TLS certificates.  Second, it enables the binding of access
+      tokens to a specific client certificate, ensuring that even if a
+      token is stolen, it cannot be used by an attacker who does not
+      possess the client's private key.
+
+   *  *RFC 9449*, Demonstrating Proof-of-Possession (DPoP) (S): A
+      lightweight, application-level sender-constraint mechanism.  It
+      binds a token to a specific client's public/private key pair
+      without relying on mutual-TLS.  This makes it suitable for
+      browser-based applications and other environments where mTLS is
+      difficult to deploy.
+
+
+
+
+
+
+Chen & Su                Expires 7 November 2026                [Page 5]
+
+Internet-Draft              OAuth 2.0 Roadmap                   May 2026
+
+
+   *  *draft-ietf-oauth-refresh-token-expiration* (Draft): Provides
+      critical security best practices for refresh tokens, including
+      recommendations for rotation (issuing a new refresh token with
+      each use) and setting expiration policies to mitigate the risks of
+      refresh token leakage.
+
+4.4.  Mitigating Logical & Implementation Flaws
+
+   *  *RFC 8707*, Resource Indicators for OAuth 2.0 (S): Allows a client
+      to specify the intended resource server (API) during the
+      authorization request.  This enables the Authorization Server to
+      issue an audience-restricted token, preventing a token intended
+      for one API from being replayed at another.
+
+   *  *RFC 9207*, Authorization Server Issuer Identification (S):
+      Prevents "mix-up" attacks where a malicious authorization server
+      could trick a client into sending a code to the wrong token
+      endpoint.  It requires the AS to declare its issuer identifier and
+      clients/RSs to validate it.
+
+   *  *draft-ietf-oauth-mix-up-mitigation* (Draft): Provides
+      comprehensive strategies to mitigate various "mix-up attacks"
+      where a credential (e.g., a code, token, or client secret) might
+      be sent to the wrong entity, expanding on the protections offered
+      by RFC9207.
+
+   *  *draft-ietf-oauth-cross-device-security* (Draft): Specifically
+      analyzes and proposes mitigations for security threats in cross-
+      device flows, such as the Device Authorization Grant (RFC8628).
+
+4.5.  Advanced Client Authentication
+
+   *  *draft-ietf-oauth-attestation-based-client-auth* (Draft): Defines
+      a client authentication method where the client must provide an
+      attestation from a trusted third party (e.g., a device
+      manufacturer or platform vendor), suitable for high-security
+      scenarios where the client's integrity must be verified.
+
+   *  *draft-ietf-oauth-spiffe-client-auth* (Draft): Defines client
+      authentication using SPIFFE SVIDs (Verifiable Identity Documents),
+      designed to provide strong, cryptographic workload identity in
+      cloud-native and service mesh environments.
+
+5.  Token Management & Formats
+
+   *  *RFC 7009*, Token Revocation (S): Defines an endpoint for clients
+      to proactively invalidate a refresh or access token, for example,
+      when a user logs out.
+
+
+
+Chen & Su                Expires 7 November 2026                [Page 6]
+
+Internet-Draft              OAuth 2.0 Roadmap                   May 2026
+
+
+   *  *RFC 7662*, Token Introspection (S): Defines an endpoint for
+      resource servers to check the validity and metadata of a token
+      with the authorization server.  This is particularly useful for
+      opaque (non-JWT) tokens.
+
+   *  *RFC 7519*, JSON Web Token (JWT) (S): Defines the JWT format, the
+      de facto standard for structured, self-contained tokens in the
+      OAuth ecosystem.
+
+   *  *RFC 8725*, JSON Web Token Best Current Practices (B): Provides
+      essential security best practices for implementing and using JWTs,
+      such as algorithm validation (alg header) and claim verification.
+
+      -  *draft-ietf-oauth-rfc8725bis* (Draft): An effort to update
+         RFC8725 with new security advice and clarifications based on
+         implementation experience.
+
+   *  *RFC 9068*, JWT Profile for OAuth 2.0 Access Tokens (S): An
+      official profile defining a recommended set of claims (like iss,
+      exp, aud, client_id) for using a JWT as an OAuth 2.0 access token,
+      promoting interoperability.
+
+6.  Client Registration, Metadata & Discovery
+
+   *  *RFC 7591*, Dynamic Client Registration (S): Allows OAuth clients
+      to register with an authorization server programmatically,
+      automating the onboarding process.
+
+   *  *RFC 7592*, Dynamic Client Registration Management (S):
+      Complements RFC7591 by defining a protocol for updating and
+      deleting client registrations.
+
+   *  *RFC 8414*, Authorization Server Metadata (S): Allows an AS to
+      publish its configuration details (like endpoint URLs and
+      supported capabilities) at a well-known URI, enabling dynamic
+      discovery by clients.
+
+   *  *draft-ietf-oauth-client-id-metadata-document* (Draft): Proposes a
+      mechanism for clients to also publish a metadata document,
+      declaring their software information and configuration to enhance
+      transparency and security for authorization servers.
+
+7.  Grant Types & Assertion Framework
+
+   *  *RFC 7521*, Assertion Framework (S): Provides a general framework
+      for using assertions (like SAML or JWT) for client authentication
+      and as authorization grants.  This is foundational for service-to-
+      service communication.
+
+
+
+Chen & Su                Expires 7 November 2026                [Page 7]
+
+Internet-Draft              OAuth 2.0 Roadmap                   May 2026
+
+
+   *  *RFC 7523*, JWT Profile for Authorization Grants (S): A concrete
+      implementation of RFC7521 using JWTs as assertions.  This allows a
+      client to use a JWT to request an access token without a direct
+      user interaction.
+
+      -  *draft-ietf-oauth-rfc7523bis* (Draft): Aims to update RFC7523
+         to address ambiguities and align with modern security
+         practices.
+
+   *  *RFC 8628*, Device Authorization Grant (S): The "Device Flow,"
+      designed for input-constrained devices (like smart TVs or CLIs)
+      that cannot host a web browser for user authentication.
+
+   *  *RFC 8693*, Token Exchange (S): A versatile grant type that allows
+      a service to exchange one type of security token for another.
+      *This is the cornerstone of modern microservices security,
+      enabling use cases like impersonation (a frontend service acting
+      on behalf of a user) and delegation (a service calling another
+      service with a more restricted token).*
+
+   *  *draft-ietf-oauth-identity-assertion-authz-grant* (Draft):
+      Proposes a new grant type that allows a client to use an identity
+      assertion (like an ID Token from an external IdP) to obtain an
+      access token, streamlining federated identity scenarios.
+
+8.  Advanced Authorization Capabilities
+
+   *  *RFC 9396*, Rich Authorization Requests (RAR) (S): Extends OAuth
+      to allow clients to request structured, fine-grained authorization
+      (e.g., access to specific bank accounts with specific transaction
+      limits) beyond simple string-based scopes.
+
+   *  *RFC 9901*, Selective Disclosure for JSON Web Tokens (S):
+      specifies a mechanism for selectively disclosing individual claims
+      within a JSON Web Token (JWT) by replacing them with salted
+      hashes, allowing a holder to reveal only a subset of information
+      to a verifier while maintaining cryptographic proof of the data's
+      integrity and origin.
+
+   *  *draft-ietf-oauth-transaction-tokens* (Draft): Explores the use of
+      short-lived tokens bound to a specific transaction to enhance
+      security for high-risk operations like financial payments,
+      building on ideas from RAR and sender-constraining.
+
+
+
+
+
+
+
+
+Chen & Su                Expires 7 November 2026                [Page 8]
+
+Internet-Draft              OAuth 2.0 Roadmap                   May 2026
+
+
+9.  Client-Specific Profiles & BCPs
+
+   *  *RFC 8252*, OAuth 2.0 for Native Apps (B): Provides best current
+      practices for implementing OAuth 2.0 in native mobile and desktop
+      applications.  It recommends using external user agents (like the
+      system browser) and custom URI schemes or claimed "https" schemes
+      for handling redirects.
+
+   *  *draft-ietf-oauth-browser-based-apps* (Draft): The definitive
+      guide for implementing OAuth 2.0 in Single-Page Applications
+      (SPAs).  It *recommends the Authorization Code flow with PKCE and
+      deprecates the Implicit Grant*. It also provides guidance on token
+      storage (e.g., using backend-for-frontend patterns) and mitigating
+      threats like Cross-Site Scripting (XSS).
+
+   *  *draft-ietf-oauth-first-party-apps* (Draft): Offers specific
+      security and implementation guidance for first-party applications,
+      where the client and authorization server belong to the same
+      entity, allowing for certain optimizations while maintaining
+      security.
+
+10.  Relationship with OpenID Connect
+
+   While this document focuses on the OAuth 2.0 authorization framework,
+   it is crucial to mention OpenID Connect (OIDC) [OIDC].  OIDC is a
+   simple identity layer built on top of OAuth 2.0 that provides
+   authentication and enables clients to verify the identity of the end-
+   user.  Many modern OAuth deployments use OIDC for user login and to
+   obtain an ID Token, and then leverage standard OAuth mechanisms for
+   API authorization using the Access Token.  Understanding the
+   distinction and synergy between OAuth (for "what a user can do") and
+   OIDC (for "who the user is") is fundamental for many use cases.
+
+   It is also worth noting the historical influence of the OpenID
+   Foundation on the IETF OAuth working group.  Several key OAuth
+   specifications were heavily inspired by, and are often compatible
+   with, earlier standards from the OpenID Connect suite.  For example,
+   the discovery mechanisms in OAuth 2.0 Authorization Server Metadata
+   [RFC8414] are based on the earlier OpenID Connect Discovery
+   specification.  Similarly, OAuth 2.0 Dynamic Client Registration
+   [RFC7591] builds upon its OpenID Connect counterpart.  The concept of
+   passing authorization request parameters in a JWT was also first
+   specified in OpenID Connect Core before being formally adopted in the
+   IETF as JWT-Secured Authorization Request (JAR) [RFC9101].
+
+
+
+
+
+
+
+Chen & Su                Expires 7 November 2026                [Page 9]
+
+Internet-Draft              OAuth 2.0 Roadmap                   May 2026
+
+
+11.  Advanced & Emerging Technologies
+
+   Specifications in this area often intersect with decentralized
+   identity, Verifiable Credentials (VCs), and privacy-enhancing
+   technologies.
+
+   *  *draft-ietf-oauth-sd-jwt-vc* (Draft): Defines how to carry
+      Verifiable Credentials (VCs) using Selectively Disclosable JWTs
+      (SD-JWTs), allowing users to disclose only necessary identity
+      attributes during an OAuth flow, enhancing user privacy.
+
+   *  *draft-ietf-oauth-status-list* (Draft): Proposes an efficient and
+      privacy-preserving mechanism for checking the revocation status of
+      credentials (like VCs) at scale.
+
+   *  *draft-ietf-oauth-identity-chaining* (Draft): Explores a mechanism
+      to securely pass and link multiple identity and authorization
+      contexts during token exchange, forming a verifiable "identity
+      chain."  This is highly relevant for complex delegation scenarios
+      in microservices.
+
+   *  *RFC 9635*, Grant Negotiation and Authorization Protocol (S):
+      specifies the Grant Negotiation and Authorization Protocol (GNAP),
+      a flexible mechanism for delegating authorization by allowing a
+      client and an authorization server to negotiate the terms of
+      access to APIs and user information over a series of
+      cryptographically secured interactions.
+
+12.  Historical & Superseded Documents
+
+   These expired drafts are valuable for understanding the evolution of
+   OAuth.  They represent early explorations of ideas, some of which
+   evolved into the standards we use today.
+
+   *  *draft-ietf-oauth-authentication* / *draft-ietf-oauth-web-
+      delegation*: Very early drafts that explored building an
+      authentication layer on top of OAuth 2.0, serving as precursors to
+      OpenID Connect.
+
+   *  *draft-ietf-oauth-v2-http-mac*: Proposed a Message Authentication
+      Code (MAC) token type as an alternative to Bearer tokens for
+      stronger request signing, but it was not widely adopted due to
+      complexity.
+
+   *  *draft-ietf-oauth-pop-architecture* / *draft-ietf-oauth-pop-key-
+      distribution*: Laid the early architectural foundation for "Proof-
+      of-Possession" (PoP) tokens, whose core ideas evolved into the
+      more mature mTLS (RFC8705) and DPoP (RFC9449) specifications.
+
+
+
+Chen & Su                Expires 7 November 2026               [Page 10]
+
+Internet-Draft              OAuth 2.0 Roadmap                   May 2026
+
+
+   *  *draft-ietf-oauth-token-binding*: An early attempt at sender-
+      constraint that aimed to bind OAuth tokens to the underlying TLS
+      channel, but the underlying Token Binding protocol it depended on
+      was not finalized by the IETF.
+
+   *  *draft-ietf-oauth-closing-redirectors*: Specifically discussed and
+      proposed solutions for mitigating the Open Redirector
+      vulnerability, with its ideas being integrated into mainstream
+      security best practices.
+
+   *  *draft-ietf-oauth-use-cases*: An early document used to collect
+      and articulate the use cases that shaped the design of OAuth 2.0.
+
+   *  *draft-ietf-oauth-distributed* / *draft-ietf-oauth-reciprocal*:
+      Explored authorization models for distributed and peer-to-peer
+      scenarios, with some concepts finding more mature expression in
+      specifications like Token Exchange (RFC8693).
+
+13.  IANA Considerations
+
+   This document has no IANA actions.
+
+14.  Security Considerations
+
+   This document is a roadmap that provides a guide to the OAuth 2.0
+   family of specifications; it does not define a protocol itself.  As
+   such, it does not introduce any new security considerations.  The
+   security of an OAuth 2.0 implementation depends on the proper
+   application of the standards and best practices described in the
+   referenced documents.
+
+   Readers are strongly encouraged to consult the security
+   considerations sections of each individual RFC and draft.  In
+   particular, the following documents provide comprehensive security
+   guidance and are considered essential reading for all implementers:
+
+   *  *OAuth 2.0 Security Best Current Practice* [RFC9728]: The primary
+      and most up-to-date guide for securing OAuth 2.0 deployments.
+
+   *  *OAuth 2.0 for Native Apps* [RFC8252]: Essential security
+      practices for mobile and desktop applications.
+
+   *  *JSON Web Token (JWT) Best Current Practices* [RFC8725]: Critical
+      guidance for anyone using JWTs as access tokens or in other
+      contexts.
+
+
+
+
+
+
+Chen & Su                Expires 7 November 2026               [Page 11]
+
+Internet-Draft              OAuth 2.0 Roadmap                   May 2026
+
+
+   Implementers should pay close attention to the evolution of security
+   drafts, such as draft-ietf-oauth-v2-1, which aim to simplify and
+   harden the core framework.
+
+15.  Acknowledgements
+
+   The authors would like to thank Julius Cordes for his valuable review
+   and suggestions.
+
+16.  References
+
+16.1.  Normative References
+
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997,
+              <https://www.rfc-editor.org/rfc/rfc2119>.
+
+   [RFC6749]  Hardt, D., Ed., "The OAuth 2.0 Authorization Framework",
+              RFC 6749, DOI 10.17487/RFC6749, October 2012,
+              <https://www.rfc-editor.org/rfc/rfc6749>.
+
+   [RFC6750]  Jones, M. and D. Hardt, "The OAuth 2.0 Authorization
+              Framework: Bearer Token Usage", RFC 6750,
+              DOI 10.17487/RFC6750, October 2012,
+              <https://www.rfc-editor.org/rfc/rfc6750>.
+
+   [RFC7009]  Lodderstedt, T., Ed., Dronia, S., and M. Scurtescu, "OAuth
+              2.0 Token Revocation", RFC 7009, DOI 10.17487/RFC7009,
+              August 2013, <https://www.rfc-editor.org/rfc/rfc7009>.
+
+   [RFC7519]  Jones, M., Bradley, J., and N. Sakimura, "JSON Web Token
+              (JWT)", RFC 7519, DOI 10.17487/RFC7519, May 2015,
+              <https://www.rfc-editor.org/rfc/rfc7519>.
+
+   [RFC7521]  Campbell, B., Mortimore, C., Jones, M., and Y. Goland,
+              "Assertion Framework for OAuth 2.0 Client Authentication
+              and Authorization Grants", RFC 7521, DOI 10.17487/RFC7521,
+              May 2015, <https://www.rfc-editor.org/rfc/rfc7521>.
+
+   [RFC7523]  Jones, M., Campbell, B., and C. Mortimore, "JSON Web Token
+              (JWT) Profile for OAuth 2.0 Client Authentication and
+              Authorization Grants", RFC 7523, DOI 10.17487/RFC7523, May
+              2015, <https://www.rfc-editor.org/rfc/rfc7523>.
+
+
+
+
+
+
+
+Chen & Su                Expires 7 November 2026               [Page 12]
+
+Internet-Draft              OAuth 2.0 Roadmap                   May 2026
+
+
+   [RFC7591]  Richer, J., Ed., Jones, M., Bradley, J., Machulak, M., and
+              P. Hunt, "OAuth 2.0 Dynamic Client Registration Protocol",
+              RFC 7591, DOI 10.17487/RFC7591, July 2015,
+              <https://www.rfc-editor.org/rfc/rfc7591>.
+
+   [RFC7592]  Richer, J., Ed., Jones, M., Bradley, J., and M. Machulak,
+              "OAuth 2.0 Dynamic Client Registration Management
+              Protocol", RFC 7592, DOI 10.17487/RFC7592, July 2015,
+              <https://www.rfc-editor.org/rfc/rfc7592>.
+
+   [RFC7636]  Sakimura, N., Ed., Bradley, J., and N. Agarwal, "Proof Key
+              for Code Exchange by OAuth Public Clients", RFC 7636,
+              DOI 10.17487/RFC7636, September 2015,
+              <https://www.rfc-editor.org/rfc/rfc7636>.
+
+   [RFC7662]  Richer, J., Ed., "OAuth 2.0 Token Introspection",
+              RFC 7662, DOI 10.17487/RFC7662, October 2015,
+              <https://www.rfc-editor.org/rfc/rfc7662>.
+
+   [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
+              2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
+              May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
+
+   [RFC8414]  Jones, M., Sakimura, N., and J. Bradley, "OAuth 2.0
+              Authorization Server Metadata", RFC 8414,
+              DOI 10.17487/RFC8414, June 2018,
+              <https://www.rfc-editor.org/rfc/rfc8414>.
+
+   [RFC8628]  Denniss, W., Bradley, J., Jones, M., and H. Tschofenig,
+              "OAuth 2.0 Device Authorization Grant", RFC 8628,
+              DOI 10.17487/RFC8628, August 2019,
+              <https://www.rfc-editor.org/rfc/rfc8628>.
+
+   [RFC8693]  Jones, M., Nadalin, A., Campbell, B., Ed., Bradley, J.,
+              and C. Mortimore, "OAuth 2.0 Token Exchange", RFC 8693,
+              DOI 10.17487/RFC8693, January 2020,
+              <https://www.rfc-editor.org/rfc/rfc8693>.
+
+   [RFC8705]  Campbell, B., Bradley, J., Sakimura, N., and T.
+              Lodderstedt, "OAuth 2.0 Mutual-TLS Client Authentication
+              and Certificate-Bound Access Tokens", RFC 8705,
+              DOI 10.17487/RFC8705, February 2020,
+              <https://www.rfc-editor.org/rfc/rfc8705>.
+
+   [RFC8707]  Campbell, B., Bradley, J., and H. Tschofenig, "Resource
+              Indicators for OAuth 2.0", RFC 8707, DOI 10.17487/RFC8707,
+              February 2020, <https://www.rfc-editor.org/rfc/rfc8707>.
+
+
+
+
+Chen & Su                Expires 7 November 2026               [Page 13]
+
+Internet-Draft              OAuth 2.0 Roadmap                   May 2026
+
+
+   [RFC9068]  Bertocci, V., "JSON Web Token (JWT) Profile for OAuth 2.0
+              Access Tokens", RFC 9068, DOI 10.17487/RFC9068, October
+              2021, <https://www.rfc-editor.org/rfc/rfc9068>.
+
+   [RFC9101]  Sakimura, N., Bradley, J., and M. Jones, "The OAuth 2.0
+              Authorization Framework: JWT-Secured Authorization Request
+              (JAR)", RFC 9101, DOI 10.17487/RFC9101, August 2021,
+              <https://www.rfc-editor.org/rfc/rfc9101>.
+
+   [RFC9126]  Lodderstedt, T., Campbell, B., Sakimura, N., Tonge, D.,
+              and F. Skokan, "OAuth 2.0 Pushed Authorization Requests",
+              RFC 9126, DOI 10.17487/RFC9126, September 2021,
+              <https://www.rfc-editor.org/rfc/rfc9126>.
+
+   [RFC9207]  Meyer zu Selhausen, K. and D. Fett, "OAuth 2.0
+              Authorization Server Issuer Identification", RFC 9207,
+              DOI 10.17487/RFC9207, March 2022,
+              <https://www.rfc-editor.org/rfc/rfc9207>.
+
+   [RFC9396]  Lodderstedt, T., Richer, J., and B. Campbell, "OAuth 2.0
+              Rich Authorization Requests", RFC 9396,
+              DOI 10.17487/RFC9396, May 2023,
+              <https://www.rfc-editor.org/rfc/rfc9396>.
+
+   [RFC9449]  Fett, D., Campbell, B., Bradley, J., Lodderstedt, T.,
+              Jones, M., and D. Waite, "OAuth 2.0 Demonstrating Proof of
+              Possession (DPoP)", RFC 9449, DOI 10.17487/RFC9449,
+              September 2023, <https://www.rfc-editor.org/rfc/rfc9449>.
+
+   [RFC9728]  Jones, M.B., Hunt, P., and A. Parecki, "OAuth 2.0
+              Protected Resource Metadata", RFC 9728,
+              DOI 10.17487/RFC9728, April 2025,
+              <https://www.rfc-editor.org/rfc/rfc9728>.
+
+   [RFC9901]  Fett, D., Yasuda, K., and B. Campbell, "Selective
+              Disclosure for JSON Web Tokens", RFC 9901,
+              DOI 10.17487/RFC9901, November 2025,
+              <https://www.rfc-editor.org/rfc/rfc9901>.
+
+16.2.  Informative References
+
+   [RFC6819]  Lodderstedt, T., Ed., McGloin, M., and P. Hunt, "OAuth 2.0
+              Threat Model and Security Considerations", RFC 6819,
+              DOI 10.17487/RFC6819, January 2013,
+              <https://www.rfc-editor.org/rfc/rfc6819>.
+
+
+
+
+
+
+Chen & Su                Expires 7 November 2026               [Page 14]
+
+Internet-Draft              OAuth 2.0 Roadmap                   May 2026
+
+
+   [RFC8252]  Denniss, W. and J. Bradley, "OAuth 2.0 for Native Apps",
+              BCP 212, RFC 8252, DOI 10.17487/RFC8252, October 2017,
+              <https://www.rfc-editor.org/rfc/rfc8252>.
+
+   [RFC8725]  Sheffer, Y., Hardt, D., and M. Jones, "JSON Web Token Best
+              Current Practices", BCP 225, RFC 8725,
+              DOI 10.17487/RFC8725, February 2020,
+              <https://www.rfc-editor.org/rfc/rfc8725>.
+
+   [OIDC]     OpenID Foundation, "OpenID Connect", n.d.,
+              <https://openid.net/connect/>.
+
+Appendix A.  References
+
+A.1.  Normative References
+
+   [RFC2119] [RFC6749] [RFC6750] [RFC7009] [RFC7519] [RFC7521] [RFC7523]
+   [RFC7591] [RFC7592] [RFC7636] [RFC7662] [RFC8174] [RFC8414] [RFC8628]
+   [RFC8693] [RFC8705] [RFC8707] [RFC9068] [RFC9101] [RFC9126] [RFC9207]
+   [RFC9396] [RFC9449] [RFC9901]
+
+A.2.  Informative References
+
+   [RFC6819] [RFC8252] [RFC8725] [RFC9728] [OIDC]
+
+Authors' Addresses
+
+   Meiling Chen
+   China Mobile
+   BeiJing
+   China
+   Email: chenmeiling@chinamobile.com
+
+
+   Li Su
+   China Mobile
+   BeiJing
+   China
+   Email: suli@chinamobile.com
+
+
+
+
+
+
+
+
+
+
+
+
+Chen & Su                Expires 7 November 2026               [Page 15]
